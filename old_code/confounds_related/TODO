@@ -1,0 +1,8 @@
+1. There is a potential problem in all log file reader scripts: the start and endRow specifications were specific to the file used to derive the script the first time. This has been corrected more or less - needs to be checked with each log reader script separately.
+
+2. Changes in log reader scripts need to be propagated to the aggregate functions, as their inputs potentially change as well.
+
+3. Run3 & Run4 aggregate function! Full test
+
+3. Re-run everything?
+

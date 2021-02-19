@@ -1,0 +1,9 @@
+Known problems that need manual adjustments:
+
+- pair 10, run 4: DBIC behav data only contains the timestamps of the first three TTLs, due to some jackass quitting the scanner before the script finished
+- pair 9, all runs: DBIC confound files missing ????? - fmriprep did not run fully till the end, runnning it now on drzeuss with 1.0.7 version, we'll see...
+- pair 7, run 4: DHMC behav data gone AWOL, due to fucked up folder naming
+- pair 6, run 3: DBIC behav data only contains the timestamps of the first three TTLs, due to some jackass quitting the scanner before the script finished
+- pair 5, run 3: DBIC behav data only contains the timestamps of the first three TTLs, due to some jackass quitting the scanner before the script finished
+- pair 3, run 3: DBIC behav data only contains the timestamps of the first three TTLs, due to some jackass quitting the scanner before the script finished
+- pair 1, run 3: DBIC behav data only contains the timestamps of the first three TTLs, due to some jackass quitting the scanner before the script finished
