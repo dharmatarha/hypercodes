@@ -21,3 +21,9 @@ Scripts / functions that we deem trustworthy (for now, until proven otherwise...
 
 ### `behav`
 Behavioral data collected in the fall for CBS-DBIC pairs
+
+- #### `conRatings`:
+  Data from 229 subjects (~25/story) who rated their engagement on a sliding scale during the story. Also has 5 min written recalls from each subject and overall ratings of how well the story flowed, how well the storytellers clicked, and how engaged they were overall.
+- #### `storyTracking`:
+  Spreadsheets for each story with data from an RA coding when objects/locations/characters are mentioned.
+  
