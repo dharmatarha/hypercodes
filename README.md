@@ -18,3 +18,6 @@ Scripts / functions that have been applied to at least some of the data at some 
 
 ### `current_code`
 Scripts / functions that we deem trustworthy (for now, until proven otherwise...). No subfolders yet.
+
+### `behav`
+Behavioral data collected in the fall for CBS-DBIC pairs
