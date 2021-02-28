@@ -116,7 +116,7 @@ allStories <- read.csv(dataPath2)
 allStories[is.na(allStories)] <- naRep
 
 #same steps as before
-allStories_melted <- reshape2::melt(allStories, id.vars = c("parID","storyID"))
+allStories_melted <- reshape2::melt(allStories[,3:905], id.vars = c("parID","storyID"))
 allStories_melted$value <- as.numeric(allStories_melted$value)
 allStories_melted$value[is.na(allStories_melted$value)] <- naRep
 #math here because two cols are parID and storyID
