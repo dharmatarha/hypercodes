@@ -1,5 +1,5 @@
 import numpy as np
-#import matplotlib.pyplot as mplot
+import matplotlib.pyplot as mplot
 from numpy.random import default_rng
 from math import pi
 
@@ -117,6 +117,11 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
     (2) compare original covariance matrix to scrambled data covariance matrix
     (3) check if correlations between original and corresponding scrambled time series are around 0
 
+    IMPORTANT: For the second check we calculate the covariance matrices, so for really large data
+    (e.g. tens of thousands of variables) consider the memory requirements of that step
+    (~ 1.6 GB for 10^3 variables, considering we need two matrices). The function does not have
+    internal checks for that.
+
     Inputs:
     data_matrix:        2D numpy array of reals. Original data set before phase scrambling.
                         Time series (Vars) X samples by default, set fft_axis if samples X time series.
@@ -126,7 +131,7 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
                         meaning that FFT is calculated across rows (= each column is a separate time series / var).
     epsilon:            Numeric value, threshold for machine accuracy. Tests are considered "passed"
                         (that is, output "test_results" values set to True), if numeric inaccuracies
-                        are below the threshold "epsilon".
+                        are below the threshold "epsilon". Defaults to 1e-10.
 
     Output:
     test_results:       List of booleans, 3-element long. Each boolean value corresponds
@@ -163,12 +168,32 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
     data_scrambled_fft = np.fft.rfft(data_scrambled, axis=0)
     # compare magnitudes
     amp_diffs = np.abs(data_fft)-np.abs(data_scrambled_fft)
-    print('Maximum difference between FFT component magnitudes: ' + str(amp_diffs.max()))
+    print('Maximum difference between FFT component magnitudes: {:.3e}'.format(amp_diffs.max()))
     # set relevant output to True if passed the test
     if not (amp_diffs>epsilon).any():
         test_results[0] = True
+        print('First test passed, original and scrambled data have matching FFT component amplitudes.')
+    else:
+        print('First test failed, found substantial difference\n' +
+              'between original and scrambled data FFT component magnitudes.')
 
     # Check the covariance matrices
+    data_cov = np.cov(data_matrix, rowvar=False)
+    data_scrambled_cov = np.cov(data_scrambled, rowvar=False)
+    maxDiff = (data_cov-data_scrambled_cov).flatten().max()  # maximum difference
+    print('Maximum difference between covariance matrices: {:.3e}'.format(maxDiff))
+    # set relevant output to True if passed the test
+    if maxDiff <= epsilon:
+        test_results[1] = True
+        print('Second test passed, original and scrambled data have matching covariance structures.')
+    else:
+        print('Second test failed, found substantial difference\n' +
+              'between original and scrambled data covariance structures.')
+
+    # Check the correlations across original and scrambled vars
+    # efficient method for column-column correlations across big matrices:
+    # https://github.com/ikizhvatov/efficient-columnwise-correlation
+    # https://stackoverflow.com/questions/19401078/efficient-columnwise-correlation-coefficient-calculation
 
 
-
+    return test_results
