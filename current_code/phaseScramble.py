@@ -19,14 +19,16 @@ def naiveColumnCorr(a, b):
 def fastColumnCorr(a, b):
     """
     Fast function for correlating corresponding columns of two matrices.
-    Uses numpy.einsum to avoid loops.
+    Uses numpy.einsum to avoid loops and do computations directly on matrices.
+    About ~ 10 times faster than the naive approach in 'naiveColumnCorr'.
+
     Inputs are 2D numpy arrays with the same shape, both sized samples X vars.
 
     NOTES:
     Could be further optimized using numpy.einsum_path for contraction order before first use,
     then simply calling einsum with that order subsequently. However, it only seems to give a
     few percents at best.
-    ontr_order = np.einsum_path("ij,ij->j", aa, bb, optimize='optimal')
+    contr_order = np.einsum_path("ij,ij->j", aa, bb, optimize='optimal')
     cov = np.einsum("ij,ij->j", aa, bb, optimize=contr_order[1])
     """
     # extract the means from each var, in both matrices
