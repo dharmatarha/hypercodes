@@ -197,3 +197,37 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
 
 
     return test_results
+
+
+
+
+def naiveColumnCorr(a, b):
+    """
+    Naive attempt at correlating corresponding columns of two matrices.
+    Uses a for loop across columns.
+    """
+    c = np.zeros((a.shape[1]))
+    for i in range(a.shape[1]):
+        c[i] = np.corrcoef(a[:, i], b[:, i])[0, 1]
+
+    return c
+
+
+def fastColumnCorr(a, b):
+    """
+    Fast function for correlating corresponding columns of two matrices.
+    Uses einsum to avoid loops.
+    Inputs are 2D numpy arrays with the same shape, both sized samples X vars.
+    """
+    # extract the means from each var, in both matrices
+    aa = a - (np.sum(a, 0) / a.shape[0]) # compute a - mean(a)
+    bb = b - (np.sum(b, 0) / b.shape[0]) # compute b - mean(b)
+
+    # multiply and sum across rows, that is, get dot products of column pairs
+    cov = np.einsum("ij,ij->j", aa, bb)
+
+    # for normalization we need the variances, separately for each var
+    var_a = np.sum(aa ** 2, 0)
+    var_b = np.sum(bb ** 2, 0)
+
+    return cov / np.sqrt(var_a*var_b)
