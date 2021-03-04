@@ -4,32 +4,44 @@ from numpy.random import default_rng
 from math import pi
 
 
-def polar2z(r,theta):
+def naiveColumnCorr(a, b):
     """
-    Polar coordinates to cartesian. Works on arrays as well (element-wise). Intended use is with double arrays.
-
-    Inputs:
-    r:          Magnitude
-    theta:      Angle in radians
-
-    Output:
-    z:          Complex array.
+    Naive, slow, "baseline" function correlating corresponding columns of two matrices.
+    Uses a for loop across columns.
     """
-    return r * np.exp( 1j * theta )
+    c = np.zeros((a.shape[1]))
+    for i in range(a.shape[1]):
+        c[i] = np.corrcoef(a[:, i], b[:, i])[0, 1]
+
+    return c
 
 
-def z2polar(z):
+def fastColumnCorr(a, b):
     """
-    Cartesian coordinates to polar. Works on arrays as well (element-wise). Intended use is with double arrays.
+    Fast function for correlating corresponding columns of two matrices.
+    Uses numpy.einsum to avoid loops.
+    Inputs are 2D numpy arrays with the same shape, both sized samples X vars.
 
-    Input:
-    z:          Complex array.
-
-    Outputs:
-    r:          Magnitude
-    theta:      Angle in radians
+    NOTES:
+    Could be further optimized using numpy.einsum_path for contraction order before first use,
+    then simply calling einsum with that order subsequently. However, it only seems to give a
+    few percents at best.
+    ontr_order = np.einsum_path("ij,ij->j", aa, bb, optimize='optimal')
+    cov = np.einsum("ij,ij->j", aa, bb, optimize=contr_order[1])
     """
-    return np.abs(z), np.angle(z)
+    # extract the means from each var, in both matrices
+    aa = a - (np.sum(a, 0) / a.shape[0]) # compute a - mean(a)
+    bb = b - (np.sum(b, 0) / b.shape[0]) # compute b - mean(b)
+
+    # multiply and sum across rows, that is, get dot products of column pairs
+    cov = np.einsum("ij,ij->j", aa, bb)
+
+    # for normalization we need the variances, separately for each var
+    var_a = np.sum(aa ** 2, 0)
+    var_b = np.sum(bb ** 2, 0)
+
+    return cov / np.sqrt(var_a*var_b)
+
 
 
 def phase_scrambling(data_matrix, fft_axis=0):
@@ -58,10 +70,6 @@ def phase_scrambling(data_matrix, fft_axis=0):
                         Returns 0 if input checks failed.
 
     TODO:
-    - missing tests: (1) compare original FFT amplitudes to scrambled data FFT amplitudes
-                     (2) compare original covariance matrix to scrambled data covariance matrix
-                     (3) check if correlations between original and corresponding scrambled time series are around 0
-    - measure timing, sanity check against per var (per voxel) calculations
     - look into implementation with FFTW, which is supposedly faster with repetitive usage (our use case)
     """
 
@@ -117,6 +125,12 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
     (2) compare original covariance matrix to scrambled data covariance matrix
     (3) check if correlations between original and corresponding scrambled time series are around 0
 
+    In the third test, we expect the correlation coefficients to show a normal
+    distribution around 0, with a "small" std. To keep things simple, we do not fit
+    a normal distribution or try a formal statistical test, but plot the histogram
+    of the values and decide the test on the basis of the mean and median values
+    (we check if they are "close" to zero, meaning < 0.05).
+
     IMPORTANT: For the second check we calculate the covariance matrices, so for really large data
     (e.g. tens of thousands of variables) consider the memory requirements of that step
     (~ 1.6 GB for 10^3 variables, considering we need two matrices). The function does not have
@@ -129,7 +143,7 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
                         Same size and shape as "data_matrix".
     fft_axis:           Axis along which FFT / iFFT is calculated. Defaults to 0,
                         meaning that FFT is calculated across rows (= each column is a separate time series / var).
-    epsilon:            Numeric value, threshold for machine accuracy. Tests are considered "passed"
+    epsilon:            Numeric value, threshold for machine accuracy. Tests 1 and 2 are considered "passed"
                         (that is, output "test_results" values set to True), if numeric inaccuracies
                         are below the threshold "epsilon". Defaults to 1e-10.
 
@@ -153,11 +167,9 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
         return 0
 
     # if fft_axis != 0, transpose the data
-    transposeFlag = False
     if fft_axis == 1:
         data_matrix = np.transpose(data_matrix)
         data_scrambled = np.transpose(data_scrambled)
-        transposeFlag = True
 
     # init output list
     test_results = [False, False, False]
@@ -191,43 +203,15 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
               'between original and scrambled data covariance structures.')
 
     # Check the correlations across original and scrambled vars
-    # efficient method for column-column correlations across big matrices:
-    # https://github.com/ikizhvatov/efficient-columnwise-correlation
-    # https://stackoverflow.com/questions/19401078/efficient-columnwise-correlation-coefficient-calculation
-
+    ccoeffs = fastColumnCorr(data_matrix, data_scrambled)
+    # if the mean and median are close to zero (<0.05) we consider that a success
+    tmp = mplot.hist(ccoeffs, bins=data_matrix.shape[1]//40)
+    if np.mean(ccoeffs) < 0.05 and np.median(ccoeffs) < 0.05:
+        test_results[2] = True
+        print('Third test passed, correlation coefficients group around 0.\n' +
+              ' Look at the histogram for further details.')
+    else:
+        print('Third test failed, correlation coefficients seem to be biased.\n' +
+              'Look at the histogram for further details.')
 
     return test_results
-
-
-
-
-def naiveColumnCorr(a, b):
-    """
-    Naive attempt at correlating corresponding columns of two matrices.
-    Uses a for loop across columns.
-    """
-    c = np.zeros((a.shape[1]))
-    for i in range(a.shape[1]):
-        c[i] = np.corrcoef(a[:, i], b[:, i])[0, 1]
-
-    return c
-
-
-def fastColumnCorr(a, b):
-    """
-    Fast function for correlating corresponding columns of two matrices.
-    Uses einsum to avoid loops.
-    Inputs are 2D numpy arrays with the same shape, both sized samples X vars.
-    """
-    # extract the means from each var, in both matrices
-    aa = a - (np.sum(a, 0) / a.shape[0]) # compute a - mean(a)
-    bb = b - (np.sum(b, 0) / b.shape[0]) # compute b - mean(b)
-
-    # multiply and sum across rows, that is, get dot products of column pairs
-    cov = np.einsum("ij,ij->j", aa, bb)
-
-    # for normalization we need the variances, separately for each var
-    var_a = np.sum(aa ** 2, 0)
-    var_b = np.sum(bb ** 2, 0)
-
-    return cov / np.sqrt(var_a*var_b)
