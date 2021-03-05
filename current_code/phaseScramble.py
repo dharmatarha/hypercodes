@@ -111,7 +111,7 @@ def phase_scrambling(data_matrix, fft_axis=0):
     data_scrambled_fft = data_fft_amp * np.exp(1j * data_fft_angle_rand)  # returns complex FFT coefficients
 
     # do inverse FFT
-    data_scrambled = np.fft.irfft(data_scrambled_fft, axis=0)
+    data_scrambled = np.fft.irfft(data_scrambled_fft, n=data_matrix.shape[0], axis=0)
 
     # transpose if necessary
     if transposeFlag:
@@ -210,8 +210,8 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
     tmp = mplot.hist(ccoeffs, bins=data_matrix.shape[1]//40)
     if np.mean(ccoeffs) < 0.05 and np.median(ccoeffs) < 0.05:
         test_results[2] = True
-        print('Third test passed, correlation coefficients group around 0.\n' +
-              ' Look at the histogram for further details.')
+        print('Third test passed, correlation coefficients group around 0 more or less.\n' +
+              'Look at the histogram for further details.')
     else:
         print('Third test failed, correlation coefficients seem to be biased.\n' +
               'Look at the histogram for further details.')
