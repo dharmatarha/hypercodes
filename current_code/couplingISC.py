@@ -13,18 +13,6 @@ def random_normal_data(tr_no, voxel_no):
     return data
 
 
-def get_random_set_1d(tr_no):
-    """
-    Helper function to generate an independent - dependent variable pair for testing OLS solution methods
-    """
-    b = np.asarray([0.1, 0, 0.5, 2, 0])
-    tmp = random_normal_data(tr_no, 1)
-    X = timeshifted_data_1d(tmp, 2, padding_value='zero')
-    Y = np.matmul(X, b)
-    return X, b, Y
-
-
-
 def timeshifted_data_1d(data, shift, padding_value='zero'):
     """
     Generates a matrix ("data_shifted") from an input vector ("data"),
@@ -66,15 +54,16 @@ def timeshifted_data_1d(data, shift, padding_value='zero'):
     """
 
     # check input data format
-    if data.shape[1] != 1 :
+    if data.shape[1] != 1:
         raise ValueError('Input arg ''data'' should have shape (n, 1)!')
     # get padding value
-    if padding_value is 'zero':
+    if padding_value == 'zero':
         pad = 0
-    elif padding_value is 'mean':
+    elif padding_value == 'mean':
         pad = np.mean(data)
     else:
         raise ValueError('Input arg ''padding_value'' should be either ''zero'' or ''mean''!')
+
     # preallocate output matrix
     data_shifted = np.zeros((data.shape[0], shift*2+1))
 
@@ -88,13 +77,13 @@ def timeshifted_data_1d(data, shift, padding_value='zero'):
     return data_shifted
 
 
-def timeshifted_data_2d(data, shift, padding_value ='zero'):
+def timeshifted_data_2d(data, shift, padding_value='zero'):
     """
     Same as timeshifted_data_1d but with a 2D array as input. In other words, performs shifting of multiple data
     vectors (e.g. multiple voxel timeseries).
 
     Inputs
-    data:           2D numpy array, with shape (n, v), where n is the length of a timeseries
+    data:           2D numpy array, with shape (n, v), where n is the length of a timeseries (e.g. TRs)
                     and v is the number of variables (e.g. voxels).
     shift:          Positive integer. Maximum number of data points to shift.
                     E.g., if shift = 2, the columns of the output matrix will be
@@ -108,7 +97,146 @@ def timeshifted_data_2d(data, shift, padding_value ='zero'):
                     range(-shift, shift+1, 1).
     """
 
+    # check input data format
+    if np.ndim(data) != 2:
+        raise ValueError('Input arg ''data'' should be 2D!')
+    # get padding value
+    if padding_value == 'zero':
+        pad = np.asarray([0])
+    elif padding_value == 'mean':
+        pad = np.mean(data, axis=0)  # returns vector
+    else:
+        raise ValueError('Input arg ''padding_value'' should be either ''zero'' or ''mean''!')
+
+    # dimensions of data
+    tr_no, vox_no = data.shape
+
+    # preallocate output matrix
+    data_shifted = np.zeros((vox_no, tr_no, shift*2+1))
+
+    # loop through data shifts - different versions depending on the padding value
+
+    # If padding is with zero (single value):
+    if pad.shape[0] == 1:
+        for i in range(-shift, shift+1, 1):
+            if i <= 0:
+                tmp = np.concatenate((data[-i:, :], np.tile(pad, (-i, vox_no))))
+            else:
+                tmp = np.concatenate((np.tile(pad, (i, vox_no)), data[0:-i, :]))
+            data_shifted[:, :, i+shift] = tmp.T
+
+    # If padding is with mean (vector):
+    else:
+        for i in range(-shift, shift+1, 1):
+            if i <= 0:
+                tmp = np.concatenate((data[-i:, :], np.tile(pad, (-i, 1))))
+            else:
+                tmp = np.concatenate((np.tile(pad, (i, 1)), data[0:-i, :]))
+            data_shifted[:, :, i+shift] = tmp.T
+
     return data_shifted
+
+
+def get_coupled_set_1d(tr_no, beta=None, shift=2, noise_level=0):
+    """
+    Helper function to generate an independent - dependent variable pair for testing coupling (OLS solution) methods.
+    For given parameters, it generates a random independent data vector ("X", "speaker" data for our fMRI
+    coupling use case) and a corresponding dependent data vector ("Y", "listener" data for our fMRI use case).
+    "Y" is calculated by applying the "beta" linear coefficients to the time-shifted versions of "X".
+    Additionally, (random standard normal) noise is added ("noise_level").
+
+    Inputs
+    tr_no:          Integer, length of data vectors (number of TRs in case of fMRI data).
+    beta:           1D numpy array or list of values, with length "shift"*2+1.
+                    Coefficients used for deriving the dependent variable from the independent.
+                    Defaults to np.asarray([0.1, 0, 0.5, 2, 0]).
+    shift:          Positive integer. Maximum number of data points to shift for the independent variable before
+                    calculating the dependent variable.
+                    E.g., if shift = 2, the independent data is shifted with range(-shift, shift+1, 1), then the
+                    independent variable will be calculated as ("shifted_independent_var" @ "beta") (+ normalization).
+    noise_level:    Positive number or zero. If not zero, a random standard normal vector ("noise") scaled by
+                    "noise_level" is added to "Y" after it is calculated from "X" and "beta".
+
+    Outputs:
+    X:          1D numpy array. Independent variable data vector with shape (tr_no, 1)
+    Y:          1D numpy array. Dependent variable data vector with shape (tr_no, 1)
+    """
+
+    # input checks
+    if beta is None:
+        beta = np.asarray([0.1, 0, 0.5, 2, 0])
+    else:
+        beta = np.asarray(beta)
+        if np.ndim(beta) != 1:
+            raise ValueError('Input arg ''beta'' should be a 1D array!')
+    if shift % 1 != 0 or shift <= 0:
+        raise ValueError('Input arg ''shift'' should be a positive integer!')
+    if beta.shape[0] != shift*2+1:
+        raise ValueError('Input arg ''beta'' should have length ''shift''*2+1!')
+    if noise_level < 0:
+        raise ValueError('Input arg ''noise_level'' should be a positive number or zero!')
+
+    # generate data
+    X = random_normal_data(tr_no, 1)
+    X_shifted = timeshifted_data_1d(X, shift, padding_value='zero')
+    Y = (X_shifted @ beta) / np.sum(beta)
+
+    # add noise if requested
+    if noise_level != 0:
+        n = random_normal_data(tr_no, 1) * noise_level
+        Y = (Y + n) / (1 + noise_level)
+
+    return X, Y
+
+
+def get_coupled_set_2d((tr_no, vox_no), beta=None, shift=2, noise_level=0):
+    """
+    Same as get_random_set1d but generating multivariate sets (e.g. many voxels' worth of data
+    at once for our fMRI use case). Outputs "X" and "Y" ("speaker" and "listener" data in our use case) are
+    2D arrays with shape (tr_no, vox_no), otherwise it works the same way as the 1D version of the function.
+
+    Inputs
+    (tr_no, vox_no): Tuple of integers, dimensions of data (number of TRs and voxels in case of fMRI data).
+    beta:            1D numpy array or list of values, with length "shift"*2+1.
+                     Coefficients used for deriving the dependent variable from the independent.
+                     Defaults to np.asarray([0.1, 0, 0.5, 2, 0]).
+    shift:           Positive integer. Maximum number of data points to shift for the independent variable before
+                     calculating the dependent variable.
+                     E.g., if shift = 2, the independent data is shifted with range(-shift, shift+1, 1), then the
+                     independent variable will be calculated as ("shifted_independent_var" @ "beta") (+ normalization).
+    noise_level:     Positive number or zero. If not zero, a random standard normal vector ("noise") scaled by
+                     "noise_level" is added to "Y" after it is calculated from "X" and "beta".
+
+    Outputs:
+    X:              2D numpy array. Independent variable data vector with shape (tr_no, vox_no)
+    Y:              2D numpy array. Dependent variable data vector with shape (tr_no, vox_no)
+    """
+
+    # input checks
+    if beta is None:
+        beta = np.asarray([0.1, 0, 0.5, 2, 0])
+    else:
+        beta = np.asarray(beta)
+        if np.ndim(beta) != 1:
+            raise ValueError('Input arg ''beta'' should be a 1D array!')
+    if shift % 1 != 0 or shift <= 0:
+        raise ValueError('Input arg ''shift'' should be a positive integer!')
+    if beta.shape[0] != shift*2+1:
+        raise ValueError('Input arg ''beta'' should have length ''shift''*2+1!')
+    if noise_level < 0:
+        raise ValueError('Input arg ''noise_level'' should be a positive number or zero!')
+
+    # generate data
+    X = random_normal_data(tr_no, vox_no)
+    X_shifted = timeshifted_data_2d(X, shift, padding_value='zero')
+    Y = (X_shifted @ beta) / np.sum(beta)
+
+    # add noise if requested
+    if noise_level != 0:
+        n = random_normal_data(tr_no, 1) * noise_level
+        Y = (Y + n) / (1 + noise_level)
+
+    return X, Y
 
 
 def coupling(speaker, listener, shift, padding_value='zero'):
