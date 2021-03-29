@@ -189,14 +189,14 @@ def get_coupled_set_1d(tr_no, beta=None, shift=2, noise_level=0):
     return X, Y
 
 
-def get_coupled_set_2d((tr_no, vox_no), beta=None, shift=2, noise_level=0):
+def get_coupled_set_2d(data_dims, beta=None, shift=2, noise_level=0):
     """
     Same as get_random_set1d but generating multivariate sets (e.g. many voxels' worth of data
     at once for our fMRI use case). Outputs "X" and "Y" ("speaker" and "listener" data in our use case) are
     2D arrays with shape (tr_no, vox_no), otherwise it works the same way as the 1D version of the function.
 
     Inputs
-    (tr_no, vox_no): Tuple of integers, dimensions of data (number of TRs and voxels in case of fMRI data).
+    data_dims:       Tuple of integers, dimensions of data (number of TRs and voxels in case of fMRI data).
     beta:            1D numpy array or list of values, with length "shift"*2+1.
                      Coefficients used for deriving the dependent variable from the independent.
                      Defaults to np.asarray([0.1, 0, 0.5, 2, 0]).
@@ -225,6 +225,10 @@ def get_coupled_set_2d((tr_no, vox_no), beta=None, shift=2, noise_level=0):
         raise ValueError('Input arg ''beta'' should have length ''shift''*2+1!')
     if noise_level < 0:
         raise ValueError('Input arg ''noise_level'' should be a positive number or zero!')
+    try:
+        tr_no, vox_no = data_dims
+    except Exception:
+        raise ValueError('Input arg ''data_dims'' should be a tuple of integers!')
 
     # generate data
     X = random_normal_data(tr_no, vox_no)
