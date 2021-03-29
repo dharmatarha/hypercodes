@@ -13,7 +13,7 @@ def random_normal_data(tr_no, voxel_no):
     return data
 
 
-def get_random_set(tr_no):
+def get_random_set_1d(tr_no):
     """
     Helper function to generate an independent - dependent variable pair for testing OLS solution methods
     """
@@ -81,9 +81,9 @@ def timeshifted_data_1d(data, shift, padding_value='zero'):
     # loop through data shifts
     for i in range(-shift, shift+1, 1):
         if i <= 0:
-            data_shifted[:, i+shift] = np.concatenate((data[-i:], np.tile(pad, -i)))
+            data_shifted[:, i+shift] = np.concatenate((data[-i:, 0], np.tile(pad, -i)))
         else:
-            data_shifted[:, i+shift] = np.concatenate((np.tile(pad, i), data[0:-i]))
+            data_shifted[:, i+shift] = np.concatenate((np.tile(pad, i), data[0:-i, 0]))
 
     return data_shifted
 
@@ -92,6 +92,20 @@ def timeshifted_data_2d(data, shift, padding_value ='zero'):
     """
     Same as timeshifted_data_1d but with a 2D array as input. In other words, performs shifting of multiple data
     vectors (e.g. multiple voxel timeseries).
+
+    Inputs
+    data:           2D numpy array, with shape (n, v), where n is the length of a timeseries
+                    and v is the number of variables (e.g. voxels).
+    shift:          Positive integer. Maximum number of data points to shift.
+                    E.g., if shift = 2, the columns of the output matrix will be
+                    created from the input vector, shifted with range(-shift, shift+1, 1).
+    padding_value:  String, either "zero" or "mean". Value for padding the input vector when it is shifted.
+                    "mean" corresponds to the mean of the input vector.
+
+    Output
+    data_shifted:   3D numpy array with shape (v, n, shift*2+1). See input arg "data" for dimensions.
+                    Each column of "data_shifted" is generated from "data" by shifting it with a value from
+                    range(-shift, shift+1, 1).
     """
 
     return data_shifted
@@ -117,3 +131,30 @@ def coupling(speaker, listener, shift, padding_value='zero'):
     Outputs
     """
 
+    # simple version, looping through voxels:
+    tr_no, vox_no = speaker.shape
+
+    # preallocate coeffs, residuals,
+    betas = np.zeros((shift*2+1, vox_no))
+    residuals = np.zeros((vox_no, 1))
+
+    for i in range(vox_no):
+        # for readability, define the data for given voxel
+        speaker_vox = speaker[:, i]
+        listener_vox = listener[:, i]
+        # get time-shifted model (speaker) data for given voxel
+        speaker_vox_shifted = timeshifted_data_1d(speaker_vox, shift, padding_value)
+
+        # Solve for coefficients, use standard least squares method.
+        # An alternative way is to perform the calculation step-by-step ourselves:
+        # X = speaker_vox_shifted
+        # Y = listener_vox
+        # b = (np.linalg.inv(X.T @ X) @ X.T) @ Y
+        # We might be able to use this latter method on a stack of matrices,
+        # that is, avoiding the for loop.
+
+        ls_results = np.linalg.lstsq(speaker_vox_shifted, listener_vox, rcond=None)
+        betas[:, i] = ls_results[0]
+        residuals[i] = ls_results[1]
+
+    return betas, residuals
