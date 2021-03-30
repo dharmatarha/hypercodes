@@ -27,7 +27,7 @@ def timeshifted_data_1d(data, shift, padding_value='zero'):
 
 
     Inputs
-    data:           1D numpy array, with shape (n, 1), where n is the length of the input data.
+    data:           2D numpy array, with shape (n, 1), where n is the length of the input data.
     shift:          Positive integer. Maximum number of data points to shift.
                     E.g., if shift = 2, the columns of the output matrix will be
                     created from the input vector, shifted with range(-shift, shift+1, 1).
@@ -240,10 +240,10 @@ def get_coupled_set_2d(data_dims, beta=None, shift=2, noise_level=0):
         n = random_normal_data(tr_no, 1) * noise_level
         Y = (Y + n) / (1 + noise_level)
 
-    return X, Y
+    return X, Y.T
 
 
-def coupling(speaker, listener, shift, padding_value='zero'):
+def coupling_loop(speaker, listener, shift, padding_value='zero'):
     """
     Coupling ISC estimation. The idea is to model the listener's BOLD time series as a
     linear function of the speaker's time shifted time series.
@@ -261,13 +261,22 @@ def coupling(speaker, listener, shift, padding_value='zero'):
                     "mean" corresponds to the mean of each voxel timeseries.
 
     Outputs
+    beta:           2D numpy array, voxels X shifts, the linear coefficients of shifted timeseries.
+    residuals:      1D numpy array (column vector), voxels X 1. Sum of squared residuals
+                    after solving the linear system in the least-squares sense.
     """
 
-    # simple version, looping through voxels:
+    # input checks
+    if speaker.shape != listener.shape or np.ndim(speaker) != 2 or np.ndim(listener) != 2:
+        raise ValueError('Input args ''speaker'' and ''listener'' should have the same shape (as 2D arrays)!')
+    if shift % 1 != 0 or shift <= 0:
+        raise ValueError('Input arg ''shift'' should be a positive integer!')
+
+    # get TR and voxel numbers
     tr_no, vox_no = speaker.shape
 
-    # preallocate coeffs, residuals,
-    betas = np.zeros((shift*2+1, vox_no))
+    # preallocate for coefficients (beta), sum of squared residuals,
+    beta = np.zeros((vox_no, shift*2+1))
     residuals = np.zeros((vox_no, 1))
 
     for i in range(vox_no):
@@ -275,7 +284,7 @@ def coupling(speaker, listener, shift, padding_value='zero'):
         speaker_vox = speaker[:, i]
         listener_vox = listener[:, i]
         # get time-shifted model (speaker) data for given voxel
-        speaker_vox_shifted = timeshifted_data_1d(speaker_vox, shift, padding_value)
+        speaker_vox_shifted = timeshifted_data_1d(speaker_vox[:, np.newaxis], shift, padding_value)
 
         # Solve for coefficients, use standard least squares method.
         # An alternative way is to perform the calculation step-by-step ourselves:
@@ -284,9 +293,105 @@ def coupling(speaker, listener, shift, padding_value='zero'):
         # b = (np.linalg.inv(X.T @ X) @ X.T) @ Y
         # We might be able to use this latter method on a stack of matrices,
         # that is, avoiding the for loop.
-
         ls_results = np.linalg.lstsq(speaker_vox_shifted, listener_vox, rcond=None)
-        betas[:, i] = ls_results[0]
+        beta[i, :] = ls_results[0]
         residuals[i] = ls_results[1]
 
-    return betas, residuals
+    return beta, residuals
+
+
+def coupling_onestep(speaker, listener, shift, padding_value='zero'):
+    """
+    Same as the function 'coupling_loop' but with a hopefully faster implementation
+    avoiding the for loop across voxels.
+    The idea is to calculate the matrix multiplication and matrix inversion steps explicitly,
+    as lower-level methods can be invoked on stacks of matrices directly.
+
+    Inputs
+    speaker:        2D numpy array, TRs X voxels (each column is a separate variable)
+    listener:       2D numpy array, TRs X voxels (each column is a separate variable)
+    shift:          Positive integer. Maximum number of data points to shift.
+                    E.g., if shift = 2, the columns of the all speaker timeseries
+                    will be shifted with the values in range(-shift, shift+1, 1).
+    padding_value:  String, either "zero" or "mean". Value for padding speaker's data when it is shifted.
+                    "mean" corresponds to the mean of each voxel timeseries.
+
+    Outputs
+    beta:           2D numpy array, voxels X shifts, the linear coefficients of shifted timeseries.
+    residuals:      1D numpy array (column vector), voxels X 1. Sum of squared residuals
+                    after solving the linear system in the least-squares sense.
+    """
+
+    # input checks
+    if speaker.shape != listener.shape or np.ndim(speaker) != 2 or np.ndim(listener) != 2:
+        raise ValueError('Input args ''speaker'' and ''listener'' should have the same shape (as 2D arrays)!')
+    if shift % 1 != 0 or shift <= 0:
+        raise ValueError('Input arg ''shift'' should be a positive integer!')
+
+    # get shifted voxel-level time series for speaker data
+    speaker_shifted = timeshifted_data_2d(speaker, shift, padding_value)  # returns 3D array, shape (v, tr, shifts)
+
+    # get transposed matrices for each voxel
+    speaker_shifted_T = np.transpose(speaker_shifted, axes=[0, 2, 1])  # 3D array, shape (v, shifts, tr)
+    listener_T = np.transpose(listener, axes=[1, 0])[:, :, np.newaxis]  # 3D array, shape (v, tr, 1)
+
+    # the least-squares solution is given by: b = (X.T @ X)^(-1) @ X.T @ Y
+    beta = (np.linalg.inv(speaker_shifted_T @ speaker_shifted) @ speaker_shifted_T) @ listener_T
+
+    return np.squeeze(beta)
+
+
+def coupling_test(data_dims, shift=2, coupling_function='loop'):
+    """
+    Test the coupling method. Main steps:
+    (1) Generate random coupled data set with known coefficients, using get_coupled_set_2d
+    (2) Estimate coupling with 'coupling_loop' or 'coupling_onestep'
+    (3) Compare the results to the known coefficients
+
+    Inputs
+    data_dims:          Tuple of integers, dimensions of both speaker and listener data
+                        (number of TRs and voxels in case of fMRI data).
+    shift:              Positive integer. Maximum number of data points to shift.
+                        E.g., if shift = 2, the columns of the all speaker timeseries
+                        will be shifted with the values in range(-shift, shift+1, 1).
+    coupling_function:  String, either 'loop' or 'onestep'. Defines the coupling estimation function to use.
+
+    Output
+    beta_known:         1D numpy array, the known coefficients
+    beta_est:           1D numpy array, estimated coefficients
+    """
+
+    # input checks
+    if shift % 1 != 0 or shift <= 0:
+        raise ValueError('Input arg ''shift'' should be a positive integer!')
+    try:
+        tr_no, vox_no = data_dims
+    except Exception:
+        raise ValueError('Input arg ''data_dims'' should be a tuple of integers!')
+
+    # generate beta vector
+    beta_known = default_rng().random((shift*2+1, 1))*2-1  # values in range -1 : +1
+    beta_known = beta_known/np.sum(beta_known)
+    beta_known = beta_known[:, 0]
+
+    # generate random coupled set
+    speaker, listener = get_coupled_set_2d(data_dims, beta=beta_known, shift=shift, noise_level=0)
+
+    # estimate coupling
+    if coupling_function == 'loop':
+        beta_est, residuals = coupling_loop(speaker, listener, shift)
+    elif coupling_function == 'onestep':
+        beta_est = coupling_onestep(speaker, listener, shift)
+
+    # compare coupling
+    beta_equal = np.zeros((vox_no, 1))
+    for i in range(vox_no):
+        beta_equal[i, 0] = np.allclose(beta_known, beta_est[i, :])
+
+    # report results
+    if np.sum(beta_equal) == vox_no:
+        print('COEFFS ARE EQUAL, TEST PASSED!')
+    else:
+        print('COEFFS ARE NOT EQUAL, TEST FAILED!')
+
+    return beta_known, beta_est
