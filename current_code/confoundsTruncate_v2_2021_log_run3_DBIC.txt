@@ -1,0 +1,103 @@
+4/5/21 - confoundsTruncate_v2_2021.py RUN 3, DBIC
+
+**NOTE that the old output folder was named "control_tasks_v2" -- this has since been updated to just "control_tasks"
+
+[jd@drzeuss ~] > python3 confoundsTruncate_v2_2021.py -f 1.5 -m -r 3 /flash/wheatley/adamb/hyperscanning_DBIC_ses2
+
+Started confoundsTruncate.py with arguments /flash/wheatley/adamb/hyperscanning_DBIC_ses2 as input folder,  /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2  as output folder, and 1.5 as FWDthreshold, also including difference  arrays for the 6 motion parameters
+
+Loaded preset parameters
+
+Got list of confound files, found 8
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000007_fmriprep/fmriprep/sub-sid000007/ses-pair02/func/sub-sid000007_ses-pair02_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 3 TRs with FWD above the threshold of 1.50 mm - 0.59 % of all data
+Affected TRs: [279 280 281]
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000007_ses-pair02_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000009_fmriprep/fmriprep/sub-sid000009/ses-pair03/func/sub-sid000009_ses-pair03_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 0 TRs with FWD above the threshold of 1.50 mm - 0.00 % of all data
+Affected TRs: []
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000009_ses-pair03_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000142_fmriprep/fmriprep/sub-sid000142/ses-pair09/func/sub-sid000142_ses-pair09_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 0 TRs with FWD above the threshold of 1.50 mm - 0.00 % of all data
+Affected TRs: []
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000142_ses-pair09_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000102_fmriprep/fmriprep/sub-sid000102/ses-pair06/func/sub-sid000102_ses-pair06_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 0 TRs with FWD above the threshold of 1.50 mm - 0.00 % of all data
+Affected TRs: []
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000102_ses-pair06_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000560_fmriprep/fmriprep/sub-sid000560/ses-pair04/func/sub-sid000560_ses-pair04_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 0 TRs with FWD above the threshold of 1.50 mm - 0.00 % of all data
+Affected TRs: []
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000560_ses-pair04_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000499_fmriprep/fmriprep/sub-sid000499/ses-pair08/func/sub-sid000499_ses-pair08_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 0 TRs with FWD above the threshold of 1.50 mm - 0.00 % of all data
+Affected TRs: []
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000499_ses-pair08_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000535_fmriprep/fmriprep/sub-sid000535/ses-pair05/func/sub-sid000535_ses-pair05_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 0 TRs with FWD above the threshold of 1.50 mm - 0.00 % of all data
+Affected TRs: []
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000535_ses-pair05_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+---------------- 
+Truncating /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000416_fmriprep/fmriprep/sub-sid000416/ses-pair07/func/sub-sid000416_ses-pair07_task-storytelling3_run-03_bold_confounds.tsv
+
+Found 0 TRs with FWD above the threshold of 1.50 mm - 0.00 % of all data
+Affected TRs: []
+
+Added difference arrays for the motion parameters to the confounds table
+
+Saved truncated file to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks_v2/sub-sid000416_ses-pair07_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+
+
+
+The loony bin is closing shop, greetings from The Combine!

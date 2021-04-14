@@ -1,0 +1,442 @@
+4/14/21 nuisRegr_runs_34_2021.py DBIC
+
+[jd@drzeuss ~] > python3 nuisRegr_runs_34_2021.py -m /flash/wheatley/adamb/mni_asym09c_mask_resamp3x3.nii.gz /flash/wheatley/adamb/hyperscanning_DBIC_ses2/
+
+
+nuisRegr.py was started with input folder /flash/wheatley/adamb/hyperscanning_DBIC_ses2/
+
+Will use the brainmask at /flash/wheatley/adamb/mni_asym09c_mask_resamp3x3.nii.gz
+
+Loaded preset parameters. Masker inputs:
+masker_verbose = 2;
+masker_cutoff = 0.01;
+masker_fwhm = 8;
+masker_stand = False
+
+Masker outputs (nuisance regressed time series)  will be saved into mat files as well
+sub-sid000007_ses-pair02_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000009_ses-pair03_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000142_ses-pair09_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000102_ses-pair06_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000560_ses-pair04_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000499_ses-pair08_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000535_ses-pair05_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000416_ses-pair07_task-storytelling3_run-03_bold_confounds_truncated_2021.csv
+sub-sid000007_ses-pair02_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+sub-sid000009_ses-pair03_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+sub-sid000142_ses-pair09_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+sub-sid000102_ses-pair06_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+sub-sid000560_ses-pair04_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+sub-sid000499_ses-pair08_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+sub-sid000535_ses-pair05_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+sub-sid000416_ses-pair07_task-storytelling4_run-04_bold_confounds_truncated_2021.csv
+
+Found 16 epi files with corresponding *confounds_truncated_2021.csv file.
+
+Loaded brainmask file /flash/wheatley/adamb/mni_asym09c_mask_resamp3x3.nii.gz
+
+Checking confound files, replacing NaN values with 0
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000007_fmriprep/fmriprep/sub-sid000007/ses-pair02/func/sub-sid000007_ses-pair02_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000007_fmriprep/fmriprep/sub-sid000007/ses-pair02/func/sub-sid000007_ses-pair02_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (508, 69880)
+
+Cleaned img shape: (65, 77, 65, 508)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000007_ses-pair02_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 15 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000009_fmriprep/fmriprep/sub-sid000009/ses-pair03/func/sub-sid000009_ses-pair03_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000009_fmriprep/fmriprep/sub-sid000009/ses-pair03/func/sub-sid000009_ses-pair03_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (506, 69880)
+
+Cleaned img shape: (65, 77, 65, 506)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000009_ses-pair03_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 14 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000142_fmriprep/fmriprep/sub-sid000142/ses-pair09/func/sub-sid000142_ses-pair09_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000142_fmriprep/fmriprep/sub-sid000142/ses-pair09/func/sub-sid000142_ses-pair09_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (503, 69880)
+
+Cleaned img shape: (65, 77, 65, 503)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000142_ses-pair09_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 13 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000102_fmriprep/fmriprep/sub-sid000102/ses-pair06/func/sub-sid000102_ses-pair06_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000102_fmriprep/fmriprep/sub-sid000102/ses-pair06/func/sub-sid000102_ses-pair06_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (561, 69880)
+
+Cleaned img shape: (65, 77, 65, 561)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000102_ses-pair06_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 12 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000560_fmriprep/fmriprep/sub-sid000560/ses-pair04/func/sub-sid000560_ses-pair04_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000560_fmriprep/fmriprep/sub-sid000560/ses-pair04/func/sub-sid000560_ses-pair04_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (533, 69880)
+
+Cleaned img shape: (65, 77, 65, 533)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000560_ses-pair04_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 11 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000499_fmriprep/fmriprep/sub-sid000499/ses-pair08/func/sub-sid000499_ses-pair08_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000499_fmriprep/fmriprep/sub-sid000499/ses-pair08/func/sub-sid000499_ses-pair08_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (504, 69880)
+
+Cleaned img shape: (65, 77, 65, 504)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000499_ses-pair08_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 10 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000535_fmriprep/fmriprep/sub-sid000535/ses-pair05/func/sub-sid000535_ses-pair05_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000535_fmriprep/fmriprep/sub-sid000535/ses-pair05/func/sub-sid000535_ses-pair05_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (501, 69880)
+
+Cleaned img shape: (65, 77, 65, 501)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000535_ses-pair05_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 9 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000416_fmriprep/fmriprep/sub-sid000416/ses-pair07/func/sub-sid000416_ses-pair07_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000416_fmriprep/fmriprep/sub-sid000416/ses-pair07/func/sub-sid000416_ses-pair07_task-storytelling3_run-03_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (500, 69880)
+
+Cleaned img shape: (65, 77, 65, 500)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000416_ses-pair07_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 8 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000007_fmriprep/fmriprep/sub-sid000007/ses-pair02/func/sub-sid000007_ses-pair02_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000007_fmriprep/fmriprep/sub-sid000007/ses-pair02/func/sub-sid000007_ses-pair02_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (482, 69880)
+
+Cleaned img shape: (65, 77, 65, 482)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000007_ses-pair02_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 7 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000009_fmriprep/fmriprep/sub-sid000009/ses-pair03/func/sub-sid000009_ses-pair03_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000009_fmriprep/fmriprep/sub-sid000009/ses-pair03/func/sub-sid000009_ses-pair03_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (481, 69880)
+
+Cleaned img shape: (65, 77, 65, 481)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000009_ses-pair03_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 6 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000142_fmriprep/fmriprep/sub-sid000142/ses-pair09/func/sub-sid000142_ses-pair09_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000142_fmriprep/fmriprep/sub-sid000142/ses-pair09/func/sub-sid000142_ses-pair09_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (480, 69880)
+
+Cleaned img shape: (65, 77, 65, 480)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000142_ses-pair09_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 5 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000102_fmriprep/fmriprep/sub-sid000102/ses-pair06/func/sub-sid000102_ses-pair06_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000102_fmriprep/fmriprep/sub-sid000102/ses-pair06/func/sub-sid000102_ses-pair06_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (486, 69880)
+
+Cleaned img shape: (65, 77, 65, 486)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000102_ses-pair06_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 4 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000560_fmriprep/fmriprep/sub-sid000560/ses-pair04/func/sub-sid000560_ses-pair04_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000560_fmriprep/fmriprep/sub-sid000560/ses-pair04/func/sub-sid000560_ses-pair04_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (480, 69880)
+
+Cleaned img shape: (65, 77, 65, 480)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000560_ses-pair04_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 3 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000499_fmriprep/fmriprep/sub-sid000499/ses-pair08/func/sub-sid000499_ses-pair08_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000499_fmriprep/fmriprep/sub-sid000499/ses-pair08/func/sub-sid000499_ses-pair08_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (485, 69880)
+
+Cleaned img shape: (65, 77, 65, 485)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000499_ses-pair08_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 2 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000535_fmriprep/fmriprep/sub-sid000535/ses-pair05/func/sub-sid000535_ses-pair05_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000535_fmriprep/fmriprep/sub-sid000535/ses-pair05/func/sub-sid000535_ses-pair05_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (481, 69880)
+
+Cleaned img shape: (65, 77, 65, 481)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000535_ses-pair05_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 1 files left
+
+
+-------------------------------------
+Calling nilearn's NiftiMasker on /flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000416_fmriprep/fmriprep/sub-sid000416/ses-pair07/func/sub-sid000416_ses-pair07_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc.nii.gz
+
+Created masker object. NiftiMasker verbosity set to 2
+
+[NiftiMasker.fit] Loading data from None
+[NiftiMasker.fit] Resampling mask
+[NiftiMasker.transform_single_imgs] Loading data from Nifti1Image('/flash/wheatley/adamb/hyperscanning_DBIC_ses2/sub-sid000416_fmriprep/fmriprep/sub-sid000416/ses-pair07/func/sub-sid000416_ses-pair07_task-storytelling4_run-04_bold_space-MNI152NLin2009cAs
+[NiftiMasker.transform_single_imgs] Smoothing images
+[NiftiMasker.transform_single_imgs] Extracting region signals
+[NiftiMasker.transform_single_imgs] Cleaning extracted signals
+
+Np array size: (478, 69880)
+
+Cleaned img shape: (65, 77, 65, 478)
+
+Cleaned img affine:
+ [[   3.    0.    0.  -96.]
+ [   0.    3.    0. -132.]
+ [   0.    0.    3.  -78.]
+ [   0.    0.    0.    1.]]
+
+Saved out residual img to /afs/dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000416_ses-pair07_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021.nii.gz , 0 files left
+
+
+
+The loony bin is closing shop, greetings from The Combine!

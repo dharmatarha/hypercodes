@@ -1,0 +1,133 @@
+4/14/21
+
+***Note that this was run before the parseEPI_listeningTask was modified to print the hemodynamic delay being used. But a hemodynamic delay of 6 seconds was used for the listening task. We may want to discuss shortening this to match the reading task (3.64 s, see below) for the sake of consistency.
+
+>> parseEPI_runs34_wrapper
+
+Subsetting EPI data from listening task for CBS sub hid000002
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000002_ses-pair02_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000007
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000007_ses-pair02_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000002 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000002_ses-pair02_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000007 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000007_ses-pair02_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for CBS sub hid000003
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000003_ses-pair03_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000009
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000009_ses-pair03_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000003 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000003_ses-pair03_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000009 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000009_ses-pair03_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for CBS sub hid000004
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000004_ses-pair04_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000560
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000560_ses-pair04_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000004 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000004_ses-pair04_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000560 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000560_ses-pair04_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for CBS sub hid000005
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000005_ses-pair05_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000535
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000535_ses-pair05_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000005 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000005_ses-pair05_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000535 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000535_ses-pair05_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for CBS sub hid000006
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000006_ses-pair06_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000102
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000102_ses-pair06_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000006 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000006_ses-pair06_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000102 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000102_ses-pair06_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for CBS sub hid000007
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000007_ses-pair07_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000416
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000416_ses-pair07_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000007 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000007_ses-pair07_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000416 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000416_ses-pair07_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for CBS sub hid000008
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000008_ses-pair08_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000499
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000499_ses-pair08_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000008 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000008_ses-pair08_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000499 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000499_ses-pair08_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for CBS sub hid000009
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000009_ses-pair09_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Subsetting EPI data from listening task for DBIC sub sid000142
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000142_ses-pair09_task-storytelling3_run-03_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for CBS sub hid000009 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-hid000009_ses-pair09_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
+
+Running interpolation on reading task EPI data for DBIC sub sid000142 using hemodynamic delay of 5 TRs (~3.64 s)
+
+Saving new timeseries to: /afs/.dbic.dartmouth.edu/usr/wheatley/jd/control_tasks/sub-sid000142_ses-pair09_task-storytelling4_run-04_bold_space-MNI152NLin2009cAsym_preproc_nuisRegr_2021_interp
