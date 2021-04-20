@@ -61,8 +61,8 @@ def phase_scrambling(data_matrix, fft_axis=0):
     across time series is the same in the phase-scrambled data as in the original.
 
     Inputs:
-    data_matrix:        2D numpy array of reals. Time series (Vars) X samples by default,
-                        set fft_axis if samples X time series.
+    data_matrix:        2D numpy array of reals. Samples X Time series (Vars) by default,
+                        set fft_axis if time series X samples.
     fft_axis:           Axis along which FFT / iFFT is calculated. Defaults to 0,
                         meaning that FFT is calculated across rows (= each column is a separate time series / var)
 
@@ -140,7 +140,7 @@ def phase_scrambling_tests(data_matrix, data_scrambled, fft_axis=0, epsilon=1e-1
 
     Inputs:
     data_matrix:        2D numpy array of reals. Original data set before phase scrambling.
-                        Time series (Vars) X samples by default, set fft_axis if samples X time series.
+                        Samples X time series (Vars) by default, set fft_axis if time series X samples.
     data_scrambled:     2D numpy array of reals, phase scrambled version of "data_matrix".
                         Same size and shape as "data_matrix".
     fft_axis:           Axis along which FFT / iFFT is calculated. Defaults to 0,
