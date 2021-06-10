@@ -381,7 +381,7 @@ def main():
             print('\nloaded ' + str(boldData[TASK][SUB].shape[0]) + ' x ' + str(boldData[TASK][SUB].shape[1]) + ' timeseries for ' + taskNames[TASK] + ' task, sub ' + subList['subID'][SUB])
 
             if normalize:
-                boldData[TASK][SUB] = preprocessing.normalize(boldData[TASK][SUB])
+                boldData[TASK][SUB] = stats.zscore(boldData[TASK][SUB],axis=0)
                 print('normalizing timeseries')
 
             if debug:
