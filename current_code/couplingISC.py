@@ -234,13 +234,14 @@ def get_coupled_set_2d(data_dims, beta=None, shift=2, noise_level=0):
     X = random_normal_data(tr_no, vox_no)
     X_shifted = timeshifted_data_2d(X, shift, padding_value='zero')
     Y = (X_shifted @ beta) / np.sum(beta)
+    Y = Y.T
 
     # add noise if requested
     if noise_level != 0:
         n = random_normal_data(tr_no, 1) * noise_level
         Y = (Y + n) / (1 + noise_level)
 
-    return X, Y.T
+    return X, Y
 
 
 def coupling_loop(speaker, listener, shift, padding_value='zero'):
@@ -264,6 +265,9 @@ def coupling_loop(speaker, listener, shift, padding_value='zero'):
     beta:           2D numpy array, voxels X shifts, the linear coefficients of shifted timeseries.
     residuals:      1D numpy array (column vector), voxels X 1. Sum of squared residuals
                     after solving the linear system in the least-squares sense.
+    rsquared:       1D numpy array (column vector), voxels X 1. R squared values (goodness-of-fit measure)
+                    for the coupling solution. Describes how well the speaker time series predict
+                    the listener time series.
     """
 
     # input checks
@@ -278,6 +282,7 @@ def coupling_loop(speaker, listener, shift, padding_value='zero'):
     # preallocate for coefficients (beta), sum of squared residuals,
     beta = np.zeros((vox_no, shift*2+1))
     residuals = np.zeros((vox_no, 1))
+    rsquared = np.zeros((vox_no, 1))
 
     for i in range(vox_no):
         # for readability, define the data for given voxel
@@ -296,8 +301,11 @@ def coupling_loop(speaker, listener, shift, padding_value='zero'):
         ls_results = np.linalg.lstsq(speaker_vox_shifted, listener_vox, rcond=None)
         beta[i, :] = ls_results[0]
         residuals[i] = ls_results[1]
+        # get R squared
+        tmp_sstotal = np.sum(np.square((listener_vox - np.mean(listener_vox))))
+        rsquared[i] = 1 - (ls_results[1]/tmp_sstotal)
 
-    return beta, residuals
+    return beta, residuals, rsquared
 
 
 def coupling_onestep(speaker, listener, shift, padding_value='zero'):
@@ -337,6 +345,9 @@ def coupling_onestep(speaker, listener, shift, padding_value='zero'):
 
     # the least-squares solution is given by: b = (X.T @ X)^(-1) @ X.T @ Y
     beta = (np.linalg.inv(speaker_shifted_T @ speaker_shifted) @ speaker_shifted_T) @ listener_T
+
+    # get residuals
+
 
     return np.squeeze(beta)
 
@@ -379,7 +390,7 @@ def coupling_test(data_dims, shift=2, coupling_function='loop'):
 
     # estimate coupling
     if coupling_function == 'loop':
-        beta_est, residuals = coupling_loop(speaker, listener, shift)
+        beta_est, residuals, rsquared = coupling_loop(speaker, listener, shift)
     elif coupling_function == 'onestep':
         beta_est = coupling_onestep(speaker, listener, shift)
 
