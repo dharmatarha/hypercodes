@@ -238,7 +238,7 @@ def get_coupled_set_2d(data_dims, beta=None, shift=2, noise_level=0):
 
     # add noise if requested
     if noise_level != 0:
-        n = random_normal_data(tr_no, 1) * noise_level
+        n = random_normal_data(tr_no, vox_no) * noise_level
         Y = (Y + n) / (1 + noise_level)
 
     return X, Y
