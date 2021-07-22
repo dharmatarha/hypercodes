@@ -328,6 +328,9 @@ def coupling_onestep(speaker, listener, shift, padding_value='zero'):
     beta:           2D numpy array, voxels X shifts, the linear coefficients of shifted timeseries.
     residuals:      1D numpy array (column vector), voxels X 1. Sum of squared residuals
                     after solving the linear system in the least-squares sense.
+    rsquared:       1D numpy array (column vector), voxels X 1. R squared values (goodness-of-fit measure)
+                    for the coupling solution. Describes how well the speaker time series predict
+                    the listener time series.
     """
 
     # input checks
@@ -347,9 +350,14 @@ def coupling_onestep(speaker, listener, shift, padding_value='zero'):
     beta = (np.linalg.inv(speaker_shifted_T @ speaker_shifted) @ speaker_shifted_T) @ listener_T
 
     # get residuals
+    listener_modelled = speaker_shifted @ beta  # matrix multiplication for each voxel, results in 3D array, shape (v, tr, 1)
+    residuals = np.sum(np.square(listener_T - listener_modelled), 1)  # 1D array, sum of squared residuals for each voxel, shape (v, 1)
 
+    # get R squared
+    tmp_sstotal = np.sum(np.square((listener - np.mean(listener, 0))), 0)  # total sum of squares per voxel, shape (v)
+    rsquared = 1 - (residuals / tmp_sstotal[:, np.newaxis])  # goodness-of-fit per voxel, shape (v, 1)
 
-    return np.squeeze(beta)
+    return np.squeeze(beta), residuals, rsquared
 
 
 def coupling_test(data_dims, shift=2, coupling_function='loop'):
