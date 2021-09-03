@@ -3,30 +3,45 @@
 """
 Script to perform nuisance regression and timeseries extraction on listening
 (Run 3) and reading (Run 4) task data.
-USAGE: python3 nuisRegr_runs34_2021.py [--mask] folder
+
+USAGE: python3 nuisRegr_runs34_2021.py [--outFolder] [--confoundsFolder] [--mask] folder
+
 The script first lists all functional nii.gz files and truncated confounds files
-for the inputted run (3 or 4). Then it applies nilearn's NiftiMasker to each
-which calls signal.clean internally, using the supplied confounds file.
-Standardization, spatial smoothing and high-pass filtering are performed if
-specified so in the magic numbers section.
-Current default is high-pass filtering (cutoff at 0.01 Hz)
-and spatial smoothing (8 mm fwhm).
-Importantly, we only look for run3 and run4 files.
-By default, the script uses the brainmask in the fmriprep output
-corresponding to the EPI file, change this behavior with the --mask
-option, by supplying the mask to be used.
+for hyperscanning runs 3 and 4 (listening and reading, respectively). Then it applies
+nilearn's NiftiMasker to each, which calls signal.clean internally, using the supplied
+confounds file. Standardization, spatial smoothing, high-pass filtering, and detrending
+are performed if specified so in the magic numbers section. Current default is high-pass
+filtering (cutoff at 0.01 Hz) and spatial smoothing (8 mm fwhm).
+
+By default, the script uses the ICBM 2009c Nonlinear Asymmetric
+whole brain mask (which can be downloaded here:
+https://www.bic.mni.mcgill.ca/ServicesAtlases/ICBM152NLin2009). Otherwise,
+if 'fmriPrep' is used as an input to the --mask option, it will revert
+to the old default of using the brainmask in the fmriprep output
+corresponding to the EPI file.
+
 Input arg:
 folder: path of data folder
+Option --outFolder, -o:
+    A path to the folder in which to save output numpy arrays. If no input, the required
+    'folder' input will be used.
+Option --confoundsFolder, -c:
+    A path to the folder in which to search for confounds files (if different from the
+    required 'folder' input).
 Option --mask, -m:
-    A path to the mask to be used OR
-    "nilearnMNI" to use the built-in MNI152 brainmask in nilearn
-If --mask is not supplied, the script looks for a brainmask in the
-standard fmriprep output form and uses that. Be careful with your own
-mask, check if its affine matches the EPI file affines
-Output is a saved out np array for extracted and cleaned timeseries for
-each functional run
+    A path to the mask to be used OR...
+    "nilearnMNI" to use the built-in MNI152 brainmask in nilearn OR...
+    "fmriPrep" to look for a brainmask in the standard fmriprep output  form and use that.
+    If no input selected, the default is to use the ICBM 2009c Nonlinear Asymmetric
+    whole brain mask. As of September, 2021, this is the option that we will use for our
+    main hyperscanning preprocessing pipeline.
+    *NOTE: Be careful with your own mask, check if its affine matches the EPI file affines
+
+Output is a saved out np array for extracted and cleaned timeseries for each functional run.
+
 Created by adamb on Thu Apr  5 05:53:26 2018
-Modified by JDK, March-April 2021
+Modified by JDK, March-April 2021 to run on discovery
+Modified again by JDK September 2021 to use ICBM 2009c Nonlinear Asymmetric whole brain mask
 """
 
 import os
