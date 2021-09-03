@@ -64,7 +64,7 @@ def params():
     saveFileAdd = '_nuisRegr_newMask' #***JD edit*** added the '_2021'
     # switch NaN values (if any) in the confound file to this vale
     NaNValue = 0
-    detrending = True
+    detrending = False
     if detrending:
         saveFileAdd = saveFileAdd + '_detrended'
     # settings for the NiftiMasker object
