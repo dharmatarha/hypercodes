@@ -226,7 +226,7 @@ def callNilearn(epiFile, maskImg, confFile, tr, saveFileAdd,
               maskImg.affine)
 
     # create a masker object: spatial smoothing, high pass filtering,
-    # standardization are all to be performed on masked image
+    # standardization, and (optionally) detrending are all to be performed on masked image
     masker = input_data.NiftiMasker(maskImg,
                                     t_r=tr,
                                     verbose=masker_verbose,
@@ -358,7 +358,7 @@ def main():
                           expectedShape,
                           maskBoolCutoff)
         print('Resampling done.')
-    elif not args.mask:  # if we use fmriprep output brainmasks
+    elif args.mask == 'fmriPrep':  # if we use fmriprep output brainmasks
         # check if there are missing brainmask files
         idx = [num for num, y in enumerate(maskFiles) if y == '']
         if idx:
@@ -368,10 +368,12 @@ def main():
         else:
             print('\nFound brainmask files for all EPI, will use those '
                   'with NiftiMasker')
-    else:  # if we point to a brainmask file, open it with nilearn
+    else:  # if we point to a brainmask file (default = ICBM 2009c Nonlinear Asymmetric), open it with nilearn
         try:
 
-            # *** JD 2021 edits ***
+            # *** JD September 2021 edits ***
+
+            # load and resample mask
             maskImg_OG = nImage.load_img(args.mask)
             maskImg = nImage.resample_img(maskImg_OG,
                                            target_affine=expectedAffine,
