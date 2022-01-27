@@ -268,7 +268,7 @@ acc = np.mean(acc, 1)
 
 # plot the results
 f = plt.errorbar(segment_lengths, acc[:, 0], yerr=acc[:, 1], fmt='o-')
-plt.title('Coeff detection error as a function of TRs, averaged ISC from segments!')
+plt.title('Coeff detection error as a function of TRs, averaged ISC from segments, SNR=' + str(1/noise_level))
 plt.xlabel('Segment length (TRs)')
 plt.ylabel('Median summed error of coeffs')
 plt.savefig('ISC_per_trs.png')
