@@ -4,7 +4,19 @@
 
 @author: adamb
 
-Minimal audio-only version.
+Test for pyaudio under python3.9.
+
+Opens an input and an output device on the same machine and streams input to output using an UDP stream on localhost.
+
+Usage examples:
+python3.9 audioTest.py
+python3.9 audioTest.py --CHUNK 256       # defines audio packet (chunk) size as 256 frames
+python3.9 audioTest.py -c 256		 # same as above
+python3.9 audioTest.py --BUFFER 8	 # defines the length of the buffer as 8 CHUNKS
+python3.9 audioTest.py -b 8 		 # same as above
+python3.9 audioTest.py -c 128 -b 4 	 # an example pushng for low latency 
+
+Do not use the ---IP input arg, not fully functional in this example!!!
 
 """
 
