@@ -37,10 +37,12 @@ AUDIO_SAMPLING_RATE = 16000                              # Sampling rate of Join
 SEARCH_TERM = 'RecordedAudio.wav'                        # fOut.json content corresponds to RecordedAudio log files.
 BYTES_PER_SAMPLE = 2                                     # 16 bit PCM encoding, thus 2 bytes = 1 sample
 START_TIME_COMMON_POS = 0                                # The byte position in fOut.jon for each audio corresponding to startTimeCommon in the task
+SECOND_TURN_START_TIME_POS = 1                           # The byte position in fOut.jon for each audio corresponding to the start of the second speech turn (and the end of the first turn)
 JOINT_TASK_END_POS = 30                                  # The byte position in fOut.json for each audio corresponding to the end of the joint portion of the task
+SPEECH_TURN_LENGTH = 30                                  # Speech turn length in seconds
 DATAFRAME_PICKLE_FILENAME = 'audio_merge_dataframe.pkl'  # Filename for pickling the final dataframe into a file
 STEREO_WAV_ENDING = 'synched_stereo'                     # Filename ending for stereo, synched wav files
-
+SAMPLING_RATE_THRESH = 2.5                                 # Threshold for deviating from the nominal sampling rate in Hz, used when estimateing sampling rates from byte positions.
 
 
 def get_tags_from_path(file_path):
@@ -97,7 +99,7 @@ def audio_files_to_df(data_dir, pattern_in_filenames='RecordedAudio'):
     "DATA_DIR/sub-99_ses-dyad99_task-control_RecordedAudio.wav", "sub-99_ses-dyad99_task-control_RecordedAudio.wav",
     "99", "dyad99", "control", and "RecordedAudio", respectively.
 
-    :param data_dir:              Path to dir containing the files we are searching for. Dir will be globbed recursively.
+    :param data_dir:              Path to dir containing the files we are searching for. Dir is globbed recursively.
     :param pattern_in_filenames:  String, some part of the filenames used for glob-bing recursively in "data_dir".
     :return: df:                  Pandas dataframe with one row for each file. Columns are "filepath", "filename",
                                   "session", "task", "subject", and "descriptor".
@@ -173,20 +175,26 @@ def file_dict_to_df(df, file_info_dict, column_to_match='filename', new_column_n
 
 
 def wavs_from_df(df, start_sample_no=START_TIME_COMMON_POS, end_sample_no=JOINT_TASK_END_POS,
-                 wav_file_tag='synched_stereo'):
+                 wav_file_tag='synched_stereo', start_offset_s=0, end_offset_s=0, sr=AUDIO_SAMPLING_RATE):
     """
     Function to generate stereo audio wavs from the mono wav files, trimmed to the start and end of the joint task.
     Input is a pandas dataframe, where each row corresponds to the data of one mono audio file, with variables on
-    the session, subject, task, fOut logfile content, etc. The outputs are the wav files themselves, with their pathes
+    the session, subject, task, fOut logfile content, etc. The outputs are the wav files themselves, with their paths
     added to the dataframe in column "synched_wav_path".
 
-    Iniput dataframe must have columns
+    Input dataframe must have columns
 
     :param df:              Pandas dataframe.
-    :param start_sample_no: Which timestamp / audio sample position corresponds to joint task start.
-    :param end_sample_no:   Which timestamp / audio sample position corresponds to joint task end.
+    :param start_sample_no: Which audio sample position in df column "audio_samples" corresponds to joint task start.
+    :param end_sample_no:   Which audio sample position in df column "audio_samples" corresponds to joint task end.
     :param wav_file_tag:    String, added to the base filenames of the original audio files to generate output
                             wav names.
+    :param start_offset_s:  Numeric value, offset from the sample no defined in arg start_sample_no, in seconds. Offset
+                            is applied at trimming. Defaults to 0.
+    :param end_offset_s:    Numeric value, offset from the sample no defined in arg end_sample_no, in seconds. Offset
+                            is applied at trimming. Defaults to 0.
+    :param sr:              Numeric value, sampling rate in HZ, required for calculating offset if args start_offset_s or
+                            end_offset_s are supplied. Defaults to module constant AUDIO_SAMPLING_RATE.
     :return: df_new:        Pandas dataframe, same as "df", but with extra column ("synched_wav_path") holding the path
                             of the output wav files.
     """
@@ -217,6 +225,14 @@ def wavs_from_df(df, start_sample_no=START_TIME_COMMON_POS, end_sample_no=JOINT_
             samples2 = df_new.loc[mask, 'audio_samples'].values[0]  # Workaround, as the masking returns a pd Series object.
             samples2 = samples2[[start_sample_no, end_sample_no]]
 
+            # Apply offsets if needed
+            if start_offset_s:
+                samples1[0] = samples1[0] + start_offset_s * sr
+                samples2[0] = samples2[0] + start_offset_s * sr
+            if end_offset_s:
+                samples1[1] = samples1[1] + end_offset_s * sr
+                samples2[1] = samples2[1] + end_offset_s * sr
+
             # User feedback
             print('\nFound valid wav files for session: ' + df_new.loc[row_idx, 'session'] + ', task: ' +
                   df_new.loc[row_idx, 'task'] + ':')
@@ -232,7 +248,7 @@ def wavs_from_df(df, start_sample_no=START_TIME_COMMON_POS, end_sample_no=JOINT_
             channel2 = channel2[samples2[0]:samples2[1]]
 
             # Sanity check
-            if frate1 != AUDIO_SAMPLING_RATE or frate2 != AUDIO_SAMPLING_RATE:
+            if frate1 != sr or frate2 != sr:
                 raise ValueError('Wrong sampling rates!!!')
 
             # Further trim to the shorter wav, there is usually some small difference.
@@ -251,13 +267,67 @@ def wavs_from_df(df, start_sample_no=START_TIME_COMMON_POS, end_sample_no=JOINT_
             stereo_path = os.path.join(stereo_dir, stereo_filename)
             print('Writing stereo wav file to ' + stereo_path)
             print(channels.shape)
-            wavfile.write(stereo_filename, AUDIO_SAMPLING_RATE, channels.T)
+            wavfile.write(stereo_path, AUDIO_SAMPLING_RATE, channels.T)
 
             # Update dataframe
             df_new.loc[row_idx, 'synched_wav_path'] = stereo_path
             df_new.loc[mask, 'synched_wav_path'] = stereo_path
 
     return df_new
+
+
+def sampling_rates_in_df(df, nominal_sr=AUDIO_SAMPLING_RATE,
+                         byte_position_indices=(SECOND_TURN_START_TIME_POS, JOINT_TASK_END_POS),
+                         turn_length_s=SPEECH_TURN_LENGTH,
+                         sampling_rate_thresh=SAMPLING_RATE_THRESH):
+    """
+    Function to loop over all wav data in dataframe "df" to check if their estimated sampling rates matches the nominal
+    sampling rate. We assume that elapsed time between byte_position_indices is
+    (byte_position_indices[1] - byte_position_indices[0]) * turn_length_s, that is, byte_positions correspond to speech
+    turn starts (and endings) and not other events.
+
+    :param df:                    Pandas dataframe.
+    :param nominal_sr:            Expected / nominal sampling rate in Hz.
+    :param byte_position_indices: Tuple of indices to select values from the "byte_positions" df column with known
+                                  timing to pass to estimate_sampling_rate for each wav.
+    :param turn_length_s:         Speech turn length in seconds, we assume that elapsed time between byte_position_indices is
+    :param sampling_rate_thresh:  Threshold for providing a warning about possibly problematic sampling rates.
+    :return: df_new:              Pandas dataframe, same as "df", but with extra column ("estimated_sr") holding the
+                                  estimated sampling rate value (in Hz).
+    """
+    df_new = df.copy()
+    df_new.loc[:, 'estimated_sr'] = None
+
+    # Nominal elapsed time between the byte positions of the audio as indexed by byte_position_indices.
+    elapsed_time = (byte_position_indices[1] - byte_position_indices[0]) * turn_length_s
+
+    # Loop through audio files
+    for row_idx in df_new.index:
+
+        byte_pos = df_new.loc[row_idx, 'byte_positions']
+        byte_position_tuple = (byte_pos[byte_position_indices[0]], byte_pos[byte_position_indices[1]])
+
+        sr_estimate = estimate_sampling_rate(byte_position_tuple, elapsed_time)
+
+        df_new.loc[row_idx, 'estimated_sr'] = sr_estimate
+
+        if abs(nominal_sr - sr_estimate) > sampling_rate_thresh:
+            warnings.warn('\nPotentially bad sampling rate (' + str(sr_estimate) + ') at row ' + str(row_idx) + '!')
+            print('Filename:', df_new.loc[row_idx, 'filename'])
+
+    return df_new
+
+
+def estimate_sampling_rate(byte_positions, elapsed_time_s, bytes_per_sample=BYTES_PER_SAMPLE):
+    """
+    Helper to estimate the sampling rate from known byte positions and timing information from an audio recording.
+    :param byte_positions:   Tuple with two elements, starting and ending byte positions for a segment with known timing.
+    :param nominal_time_s:   Elapsed time between byte_positions[0] and byte_positions[1] in seconds.
+    :param bytes_per_sample: Number of bytes per audio sample, defaults to module constant BYTES_PER_SAMPLE.
+    :return:                 Estimated sampling rate in Hz.
+    """
+    return (byte_positions[1] - byte_positions[0]) / (elapsed_time_s * bytes_per_sample)
+
 
 
 def main():
@@ -301,13 +371,20 @@ def main():
         df.at[row_idx, 'timestamps'] = df.loc[row_idx, 'audio_samples'] / AUDIO_SAMPLING_RATE
     print('Done. Dataframe variables are ', list(df.columns))
 
-    # Define start and stop points for JointStory portion of the audio, edit wav files accordingly
-    print('\nPairing up wav files, trimming, and writing them out in stereo...')
-    df = wavs_from_df(df, start_sample_no=START_TIME_COMMON_POS, end_sample_no=JOINT_TASK_END_POS,
-                      wav_file_tag=STEREO_WAV_ENDING)
+    # Check for bad sampling rates
+    print('\nChecking for bad sampling rates...')
+    df = sampling_rates_in_df(df, byte_position_indices=(SECOND_TURN_START_TIME_POS, JOINT_TASK_END_POS))
     print('Done. Dataframe variables are ', list(df.columns))
 
-    # Save out dataframe for trouble-shooting, use pickle
+    # Define start and stop points for JointStory portion of the audio, edit wav files accordingly
+    print('\nPairing up wav files, trimming, and writing them out in stereo...')
+    df = wavs_from_df(df, start_sample_no=SECOND_TURN_START_TIME_POS,
+                      end_sample_no=JOINT_TASK_END_POS,
+                      wav_file_tag=STEREO_WAV_ENDING,
+                      start_offset_s=-1 * SPEECH_TURN_LENGTH)
+    print('Done. Dataframe variables are ', list(df.columns))
+
+    # Save out dataframe for troubleshooting, use pickle
     df_filename = os.path.join(args.data_dir, DATAFRAME_PICKLE_FILENAME)
     df.to_pickle(df_filename)
     print('\nSaved out the dataframe out with pickle to ' + df_filename)

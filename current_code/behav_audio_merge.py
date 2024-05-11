@@ -33,7 +33,7 @@ Using these byte / frame positions, the "RecordedAudio.wav" channels are
 trimmed to their start positions at common start time, and then combined
 into the stereo wav file.
 This part is handled by the functions "find_wavs_bytepos" and 
-"get_Stereo_wavs".
+"get_stereo_wavs".
  
 
 """
